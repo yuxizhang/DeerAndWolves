@@ -11,6 +11,8 @@ enum LifeType {
 	BLANK, GRASS, DEER, WOLF
 };
 
+int GetSign(int x);
+
 struct Position {
 	int x;
 	int y;
@@ -29,10 +31,19 @@ struct Position {
 	inline bool IsValid() const {
 		return (x >= 0) && (x < kMapSize) && (y >= 0) && (y < kMapSize);
 	}
+
+	bool IsSame(const Position& pos) const {
+		return (x == pos.x && y == pos.y);
+	}
 };
 
-bool operator==(const Position& lhs, const Position& rhs) {
-	return (lhs.x == rhs.x) && (lhs.y == rhs.y);
-}
+
+// bool operator==(const Position& lhs, const Position& rhs) {
+// 	return (lhs.x == rhs.x) && (lhs.y == rhs.y);
+// }
+
+// bool operator!=(const Position& lhs, const Position& rhs) {
+// 	return !(lhs == rhs);
+// }
 
 #endif

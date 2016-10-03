@@ -34,7 +34,7 @@ public:
 	bool IsGrass(Position pos); 
 
 	bool IsAnimal(Position pos);
-	
+
 	LifeType GetType(int x, int y);
 
 	LifeType GetType(Position pos);
@@ -53,8 +53,7 @@ public:
 		}
 
 		for (int i = 0; i < 1; ++i) cout << endl;
-		// string st;
-		// getline(cin, st);
+		
 	}
 
 private:

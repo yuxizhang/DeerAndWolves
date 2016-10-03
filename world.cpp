@@ -106,6 +106,7 @@ void World::MoveLife(Position origin, Position target) {
 	if (!IsBlank(target)) {
 		float energy = cells[target.x][target.y]->Kill();
 	}
+	cells[origin.x][origin.y]->position = target;
 	cells[target.x][target.y] = cells[origin.x][origin.y];
 	cells[origin.x][origin.y] = NULL;
 }

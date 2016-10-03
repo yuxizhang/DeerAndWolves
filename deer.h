@@ -18,9 +18,8 @@ public:
 	Deer(World* world, int lifespan, float max_energy, Position pos) :
 		Life(DEER, world, lifespan, max_energy, pos),
 		hunger(0) {
-
+		path.clear();
 	}
-
 
 	void Update() {
 		Life::Update();
@@ -32,16 +31,23 @@ public:
 	}
 
 private:
+	struct Node {
+		Position pos;
+		int parent;
+		Node(Position pos, int parent) : pos(pos), parent(parent) {}
+	};
 	int movement;
 	float hunger;
 	bool done;
-
+	vector<Position> path;
 
 	void EatGrass() {
 		Position grass_pos = FindNearest(GRASS);
+		cout << "grass pos: " << grass_pos.x << " " << grass_pos.y << endl;
 		// PrintMap(world, "deer");
 		if (grass_pos.IsValid()) {
 			Position next_pos = FindPath(grass_pos);
+			cout << "next step: " << next_pos.x << " " << next_pos.y << endl;
 			done = MoveTo(next_pos);
 		}
 	}
@@ -55,47 +61,52 @@ private:
 		bfs.push(position);
 		inqueue[position.x][position.y] = true;
 
-		// struct node {
-		// 	Position pos;
-		// 	int parent;
-		// 	Node(Position pos, int parent) : pos(pos), parent(parent) {}
-		// };
-		// vector<node> path;
-		// path.push_back(Node(position), 0);
+		path.clear();
+
+		vector<Node> path_queue;
+		int path_index = 0;
+		path_queue.push_back(Node(position, path_index));
+
 		cout << world->GetType(position) << endl;
 		while (!bfs.empty()) {
 			Position pos = bfs.front();
 			bfs.pop();
-			if (world->GetType(pos) == type) {
-				return pos;
-			}
 			for (int k = 0; k < 4; ++k) {
 				Position newpos(pos.x + dx[k], pos.y + dy[k]);
-				if (newpos.IsValid() && (world->GetType(pos) == BLANK)
-						&& !inqueue[newpos.x][newpos.y]) {
-					bfs.push(newpos);
-					inqueue[newpos.x][newpos.y] = true;
+				if (newpos.IsValid()) {
+					if (world->GetType(newpos) == type) {
+						path_queue.push_back(Node(newpos, path_index));
+						int i = path_queue.size() - 1;
+						while (i > 0) {
+							path.push_back(path_queue[i].pos);
+							i = path_queue[i].parent;
+						}
+						return newpos;
+					}
+					if (!inqueue[newpos.x][newpos.y]
+							&& (world->GetType(newpos) == BLANK)) {
+						bfs.push(newpos);
+						path_queue.push_back(Node(newpos, path_index));
+						inqueue[newpos.x][newpos.y] = true;
+					}
 				}
 			}
+			++path_index;
 		}
+		
 		return Position(-1, -1);
 	}
 
-	Position FindPath(const Position& target) const {
-		int dirx = (target.x > position.x) ? 1 : -1;
-		int diry = (target.y > position.y) ? 1 : -1;
-		int dx[4] = {dirx, 0, -dirx, 0};
-		int dy[4] = {0, diry, 0, -diry};
-		for (int k = 0; k < 4; ++k) {
-			if (world->IsBlank(position.x + dx[k], position.y + dy[k])) {
-				return Position(position.x + dx[k], position.y + dy[k]);
-			}
-		}
-		return Position(position);
+	Position FindPath(const Position& target) {
+		if (path.empty()) return Position(-1, -1);
+		Position ret = path.back();
+		path.pop_back();
+		return ret;
+		// return Position(-1, -1);
 	}
 
 	bool MoveTo(const Position& target) const {
-		if (target == position) return false;
+		if (position.IsSame(target)) return false;
 		world->MoveLife(position, target);
 		return true;
 	}

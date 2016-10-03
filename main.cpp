@@ -7,7 +7,6 @@
 #include "debug.h"
 #include "deer.h"
 #include "grass.h"
-// #include "grass_group.h"
 #include "life.h"
 #include "utils.h"
 #include "world.h"

@@ -15,7 +15,7 @@ public:
 	Life(LifeType type, World* world, int lifespan, float max_energy, Position pos);
 
 	virtual void Update();
-	float Kill(); 
+	float Kill();
 
 protected:
 	World* world;

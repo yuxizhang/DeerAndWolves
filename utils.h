@@ -12,6 +12,7 @@ enum LifeType {
 };
 
 int GetSign(int x);
+float Max(float a, float y);
 
 struct Position {
 	int x;

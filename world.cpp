@@ -68,7 +68,7 @@ void World::Update() {
 
 void World::NewGrass() {
 	int lifespan = 100;
-	int max_energy = 100;
+	int max_energy = 50;
 	int max_try = 10;
 	int x = rand() % kMapSize, y = rand() % kMapSize;
 	while (cells[x][y] != NULL && max_try > 0) {
@@ -105,6 +105,7 @@ void World::MoveLife(Position origin, Position target) {
 	}
 	if (!IsBlank(target)) {
 		float energy = cells[target.x][target.y]->Kill();
+		cells[origin.x][origin.y]->hunger -= energy;
 	}
 	cells[origin.x][origin.y]->position = target;
 	cells[target.x][target.y] = cells[origin.x][origin.y];

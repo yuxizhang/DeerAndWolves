@@ -8,6 +8,7 @@ class World;
 class Life {
 public:
 	float energy;
+	float hunger;
 	bool dead;
 	Position position;
 	const LifeType type;
@@ -24,6 +25,7 @@ private:
 	const int kLifespan;
 	const float kMaxEnergy;
 	int age;
+
 
 	float CalculateEnergy(int age) {
 		return 4.0f * kMaxEnergy * (float) (age * (kLifespan - age))

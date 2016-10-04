@@ -4,6 +4,7 @@
 #include <string>
 #include <time.h>       /* time */
 
+#include "animal.h"
 #include "debug.h"
 #include "deer.h"
 #include "grass.h"

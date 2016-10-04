@@ -1,7 +1,6 @@
 #ifndef GRASS_H
 #define GRASS_H
 
-#include <iostream>
 #include "life.h"
 #include "utils.h"
 
@@ -15,6 +14,10 @@ public:
 	void Update() {
 		Life::Update();
 		cout << "grass update" << endl;
+	}
+
+	void GetEnergy(float energy) {
+		// For grass, do nothing
 	}
 };
 

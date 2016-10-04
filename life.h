@@ -17,6 +17,7 @@ public:
 
 	virtual void Update();
 	float Kill();
+	virtual void GetEnergy(float energy) {}
 
 protected:
 	World* world;

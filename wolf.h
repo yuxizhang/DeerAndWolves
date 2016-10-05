@@ -3,11 +3,12 @@
 
 #include "animal.h"
 
-class Wolf : private Animal {
+class Wolf : public Animal {
 public:
 	Wolf(World* world, int lifespan, float max_energy, Position pos):
 			Animal(WOLF, world, lifespan, max_energy, pos) {
 		vision = 100;
+		moved =false;
 	}
 	~Wolf() {
 		Animal::~Animal();
@@ -15,10 +16,11 @@ public:
 	void Update() {
 		Animal::Update();
 		if (dead) return;
-		Animal::FindFood(DEER);
-		cout << "after, wolf energy: " << energy << endl;
-		cout << "after, wolf hunger: " << hunger << endl;
-		cout << "after, wolf strength: " << strength << endl;
+		if (!moved) moved = Animal::FindFood(DEER);
+		if (!moved && Life::IsMature()) moved = Animal::FindMate();
+		// cout << "after, wolf energy: " << energy << endl;
+		// cout << "after, wolf hunger: " << hunger << endl;
+		// cout << "after, wolf strength: " << strength << endl;
 	}
 };
 

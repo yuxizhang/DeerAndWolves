@@ -8,11 +8,11 @@
 
 void PrintMap(World* world, string label = "") {
 	// ofstream fout("map.txt");
-	char symbol[4] = {'.', '*', 'o', 'x'};
+	// char symbol[4] = {'.', '*', 'o', 'x'};
 	cout << label << endl;
 	for (int i = 0; i < kMapSize; ++i) {
 		for (int j = 0; j < kMapSize; ++j) {
-			cout << symbol[world->GetType(i, j)];
+			cout << world->GetId(i, j) << " ";
 		}
 		cout << endl;
 	}

@@ -5,14 +5,16 @@
 Deer::Deer(World* world, int lifespan, float max_energy, Position pos) :
 		Animal(DEER, world, lifespan, max_energy, pos) {
 	vision = 10;
+	moved = false;
 }
 
 void Deer::Update() {
 	Animal::Update();
 	// cout << "dead " << dead << endl;
 	if (dead) return;
-	bool moved = DodgeEnemy(WOLF);
-	Animal::FindFood(GRASS);
+	if (!moved) moved = DodgeEnemy(WOLF);
+	if (!moved) moved = Animal::FindFood(GRASS);
+	if (!moved && Life::IsMature()) moved = Animal::FindMate();
 
 // 	cout << "deer updated" << endl;
 // 	cout << "deer energy: " << energy << endl;
@@ -26,7 +28,7 @@ bool Deer::DodgeEnemy(LifeType type) {
 	if (enemy_pos.IsValid() && position.Dist(enemy_pos) < vision) {
 		while (strength > kMoveStrength) {
 			Position next_pos = RunAway(enemy_pos);
-			cout << "next pos: " << next_pos.x << " " << next_pos.y << endl;
+			// cout << "next pos: " << next_pos.x << " " << next_pos.y << endl;
 			if (!MoveTo(next_pos)) break;
 			moved = true;
 		}

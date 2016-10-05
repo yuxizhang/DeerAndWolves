@@ -4,7 +4,7 @@
 #include "animal.h"
 #include "utils.h"
 
-class Deer : private Animal {
+class Deer : public Animal {
 public:
 	Deer(World* world, int lifespan, float max_energy, Position pos);
 	~Deer() {

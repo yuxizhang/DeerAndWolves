@@ -28,27 +28,44 @@ void Animal::Update() {
 	strength = Max(strength + energy - hunger, energy);
 	if (hunger > energy) {
 		Life::KillSelf();
+		return;
 	}
-	// cout << "animal updated" << endl;
 }
 
 void Animal::GainEnergy(float energy) {
 	hunger -= energy;
 }
 
-void Animal::FindFood(LifeType type) {
-	// bool hungry = hunger > energy * kHungerLevel;
-	if (hunger < 0) return;
+bool Animal::FindFood(LifeType type) {
+	if (hunger < 0) return false;
+	bool move = false;
 	Position target_pos = FindNearest(type);
-	// cout << "grass pos: " << grass_pos.x << " " << grass_pos.y << endl;
 
 	if (target_pos.IsValid()) {
 		while (strength > kMoveStrength) {
 			Position next_pos = FindPath(target_pos);
-			// cout << "next step: " << next_pos.x << " " << next_pos.y << endl;
-			if (!MoveTo(next_pos)) break;
+			if (!MoveTo(next_pos)) break; else move = true;
 		}
 	}
+	return move;
+}
+
+bool Animal::FindMate() {
+	bool move = false;
+	Position target_pos = FindNearest(type);
+	if (target_pos.IsValid()) {
+		path.erase(path.begin());
+		while (strength > kMoveStrength) {
+			Position next_pos = FindPath(target_pos);
+			if (!MoveTo(next_pos)) break; else move = true;
+		}
+		if (position.Dist(target_pos) == 1) {
+			world->SetMoved(target_pos);
+			Position newborn_pos = FindNearest(BLANK);
+			if (newborn_pos.IsValid()) world->NewAnimal(type, newborn_pos);
+		}
+	}
+	return move;
 }
 
 Position Animal::FindNearest(LifeType type) {
@@ -72,8 +89,9 @@ Position Animal::FindNearest(LifeType type) {
 		bfs.pop();
 		for (int k = 0; k < 4; ++k) {
 			Position newpos(pos.x + dx[k], pos.y + dy[k]);
-			if (newpos.IsValid()) {
-				if (world->GetType(newpos) == type) {
+			if (newpos.IsValid() && !position.IsSame(newpos)) {
+				if (world->GetType(newpos) == type
+						&& (type != this->type || world->IsMature(newpos))) {
 					path_queue.push_back(Node(newpos, path_index));
 					int i = path_queue.size() - 1;
 					while (i > 0) {
@@ -83,7 +101,7 @@ Position Animal::FindNearest(LifeType type) {
 					return newpos;
 				}
 				if (!inqueue[newpos.x][newpos.y]
-						&& (world->GetType(newpos) == BLANK)) {
+						&& (world->GetType(newpos) < this->type)) {
 					bfs.push(newpos);
 					path_queue.push_back(Node(newpos, path_index));
 					inqueue[newpos.x][newpos.y] = true;

@@ -28,6 +28,8 @@ public:
 	void AddLife(Life* life);
 	void MoveLife(Position origin, Position target);
 
+	void SetMoved(Position pos);
+
 	bool IsBlank(Position pos);
 	bool IsBlank(int x, int y);
 
@@ -35,11 +37,17 @@ public:
 
 	bool IsAnimal(Position pos);
 
+	bool IsMature(Position pos);
+
 	LifeType GetType(int x, int y);
 
 	LifeType GetType(Position pos);
 
+	int GetId(int x, int y);
+
 	float GetEnergy(int x, int y);
+
+	void NewAnimal(LifeType type, Position newborn);
 
 	void PrintMap(string label = "") {
 		// ofstream fout("map.txt");
@@ -47,7 +55,7 @@ public:
 		cout << label << endl;
 		for (int i = 0; i < kMapSize; ++i) {
 			for (int j = 0; j < kMapSize; ++j) {
-				cout << symbol[GetType(i, j)];
+				cout << GetId(i, j) << " ";
 			}
 			cout << endl;
 		}
@@ -55,6 +63,7 @@ public:
 		for (int i = 0; i < 1; ++i) cout << endl;
 		
 	}
+
 
 private:
 	Life*** cells;
@@ -64,6 +73,10 @@ private:
 
 	void NewGrass();
 	void UpdateGroup(list<Life*> life_list);
+	void Refresh(list<Life*> life_list);
+
+	int deer_amount;
+	int wolf_amount;
 };
 
 

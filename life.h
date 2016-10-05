@@ -10,6 +10,8 @@ public:
 	float energy;
 	float hunger;
 	bool dead;
+	bool moved;
+	int id;
 	Position position;
 	const LifeType type;
 
@@ -20,15 +22,17 @@ public:
 	void KillSelf();
 	float Kill();
 	virtual void GainEnergy(float energy) {}
+	bool IsMature() {
+		return age > kLifespan * 0.2;
+	}
 
 protected:
 	World* world;
 
 private:
-	const int kLifespan;
 	const float kMaxEnergy;
 	int age;
-
+	const int kLifespan;
 
 	float CalculateEnergy(int age) {
 		return 4.0f * kMaxEnergy * (float) (age * (kLifespan - age))

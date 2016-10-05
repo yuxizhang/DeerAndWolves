@@ -32,38 +32,59 @@ World::~World() {
 }
 
 void World::Update() {
-	// for (int i = 0; i < kMapSize; ++i) {
-	// 	for (int j = 0; j < kMapSize; ++j) {
-	// 		if (cells[i][j]) {
-	// 			cells[i][j]->Update();
-	// 		}
-	// 	}
-	// }
+
+	cout << "**************** new round *****************\n" << endl;
+
+	cout << "initla map" << endl;
+	PrintMap();
+
+	cout << "wolf turn begin" << endl;
+	UpdateGroup(wolf_list);
+	PrintMap();
+	cout << "wolf turn end" << endl;
+
+	cout << "deer turn begin" << endl;
+	// cout << "deer amount: " << deer_list.size() << endl;
+	// Update deer
+	UpdateGroup(deer_list);
+	PrintMap();
+	cout << "deer turn end" << endl;
+
 	cout << "grass turn begin" << endl;
 	NewGrass();
+	cout << "new grass generated" << endl;
 	// Update grass
-	list<Life*>::iterator it = grass_list.begin();
-	while (it != grass_list.end()) {
+	UpdateGroup(grass_list);
+	PrintMap();
+	cout << "grass turn end" << endl;
+	
+
+
+	
+	PrintMap();
+}
+
+void World::UpdateGroup(list<Life*> life_list) {
+	list<Life*>::iterator it = life_list.begin();
+	int i = 1;
+	while (it != life_list.end()) {
+		cout << "No." << i << endl;
 		(*it)->Update();
 		if ((*it)->dead) {
-			free(*it);
-			it = grass_list.erase(it);
+			// SetBlank((*it)->position);
+			// cout << "map cleared " << endl;
+			// cout << (*it)->type << " is dead" << endl;
+			// Life* pt = (*it);
+			// cout << "pointer address " << (*it) << endl;
+			// cout << "pointer address " << pt << endl;
+			// delete &pt;
+			// cout << "pointer freed " << endl;
+			it = life_list.erase(it);
 		} else {
 			++it;
 		}
+		i++;
 	}
-	cout << "grass turn end" << endl;
-	PrintMap();
-	cout << "deer turn begin" << endl;
-	cout << "deer amount: " << deer_list.size() << endl;
-	// Update deer
-	it = deer_list.begin();
-	while (it != deer_list.end()) {
-		(*it)->Update();
-		++it;
-	}
-	cout << "deer turn end" << endl;
-	PrintMap();
 }
 
 void World::NewGrass() {
@@ -93,19 +114,21 @@ void World::AddLife(Life* life) {
 		case DEER :
 			deer_list.push_back(life);
 			break;
+		case WOLF :
+			wolf_list.push_back(life);
 		default :
 			break;
 	}
 }
 
 void World::MoveLife(Position origin, Position target) {
-	if (!IsAnimal(origin) || IsAnimal(target)) {
+	if (!IsAnimal(origin) || GetType(target) >= GetType(origin)) {
 		cout << "WARNING: cannot move life." << endl;
 		return;
 	}
 	if (!IsBlank(target)) {
 		float energy = cells[target.x][target.y]->Kill();
-		cells[origin.x][origin.y]->GetEnergy(energy);
+		cells[origin.x][origin.y]->GainEnergy(energy);
 	}
 	cells[origin.x][origin.y]->position = target;
 	cells[target.x][target.y] = cells[origin.x][origin.y];

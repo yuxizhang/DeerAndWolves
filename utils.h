@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <iostream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -35,6 +36,10 @@ struct Position {
 
 	bool IsSame(const Position& pos) const {
 		return (x == pos.x && y == pos.y);
+	}
+
+	int Dist(const Position& pos) const {
+		return abs(x - pos.x) + abs(y - pos.y);
 	}
 };
 

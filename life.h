@@ -14,10 +14,12 @@ public:
 	const LifeType type;
 
 	Life(LifeType type, World* world, int lifespan, float max_energy, Position pos);
+	virtual ~Life() {}
 
 	virtual void Update();
+	void KillSelf();
 	float Kill();
-	virtual void GetEnergy(float energy) {}
+	virtual void GainEnergy(float energy) {}
 
 protected:
 	World* world;

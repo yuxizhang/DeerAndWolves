@@ -9,13 +9,17 @@ Life::Life(LifeType type, World* world, int lifespan, float max_energy, Position
 }
 
 void Life::Update() {
-	cout << "life update" << endl;
 	age++;
 	if (age > kLifespan) {
 		Kill();
 		return;
 	}
 	energy = CalculateEnergy(age);
+}
+
+void Life::KillSelf() {
+	Kill();
+	world->SetBlank(position);
 }
 
 float Life::Kill() {

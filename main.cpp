@@ -10,6 +10,7 @@
 #include "grass.h"
 #include "life.h"
 #include "utils.h"
+#include "wolf.h"
 #include "world.h"
 
 using namespace std;
@@ -18,7 +19,8 @@ int main() {
 	srand (time(NULL));
 
 	World* world = new World();
-	Deer deer(world, 200, 200, Position(0, 0));
+	Deer* deer = new Deer(world, 200, 200, Position(0, 0));
+	Wolf* wolf = new Wolf(world, 200, 300, Position(0, 9));
 
 	for (int t = 0; t < 200; ++t) {
 		world->Update();

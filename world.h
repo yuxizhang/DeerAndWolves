@@ -60,8 +60,10 @@ private:
 	Life*** cells;
 	list<Life*> grass_list;
 	list<Life*> deer_list;
+	list<Life*> wolf_list;
 
 	void NewGrass();
+	void UpdateGroup(list<Life*> life_list);
 };
 
 

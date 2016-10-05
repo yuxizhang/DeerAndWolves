@@ -11,9 +11,12 @@ public:
 	Grass(World* world, int lifespan, float max_energy, Position pos) :
 			Life(GRASS, world, lifespan, max_energy, pos) {}
 
+	~Grass() {
+		Life::~Life();
+	}
+
 	void Update() {
 		Life::Update();
-		cout << "grass update" << endl;
 	}
 
 	void GetEnergy(float energy) {

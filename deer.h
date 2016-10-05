@@ -7,7 +7,13 @@
 class Deer : private Animal {
 public:
 	Deer(World* world, int lifespan, float max_energy, Position pos);
+	~Deer() {
+		Animal::~Animal();
+	}
 	void Update();
+private:
+	bool DodgeEnemy(LifeType type);
+	Position RunAway(const Position& enemy);
 };
 
 

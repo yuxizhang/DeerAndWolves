@@ -5,9 +5,11 @@
 
 using namespace std;
 
-static const float kMoveStrength = 10;
-static const float kHungerSpeed = 0.1;
-static const float kHungerLevel = 0.2;
+struct Node {
+	Position pos;
+	int parent;
+	Node(Position pos, int parent) : pos(pos), parent(parent) {}
+};
 
 
 Animal::Animal(LifeType type, World* world, int lifespan, float max_energy, Position pos) :
@@ -22,15 +24,15 @@ Animal::~Animal() {
 
 void Animal::Update() {
 	Life::Update();
-	cout << "deer update" << endl;
 	hunger += energy * kHungerSpeed;
 	strength = Max(strength + energy - hunger, energy);
-	// movement += (movement < 10) ? 1 : 0;
-	// RunAwayFromWolves(env.wolves);
-	
+	if (hunger > energy) {
+		Life::KillSelf();
+	}
+	// cout << "animal updated" << endl;
 }
 
-void Animal::GetEnergy(float energy) {
+void Animal::GainEnergy(float energy) {
 	hunger -= energy;
 }
 
